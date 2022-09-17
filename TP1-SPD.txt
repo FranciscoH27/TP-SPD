@@ -1,0 +1,85 @@
+https://www.tinkercad.com/things/0pfOFMLqabS-tp1/editel?sharecode=wVYPpBzewMk2M_WTlqZPxdDzGkG01AKKW3CHIRE5ot8
+
+#define LED9 13
+#define LED8 12
+#define LED7 11
+#define LED6 10 
+#define LED5 9
+#define LED4 8
+#define LED3 7
+#define LED2 6
+#define LED1 5
+#define LED0 4
+void setup()
+{
+   Serial.begin(9600);
+  pinMode(LED0, OUTPUT);
+  pinMode(LED1, OUTPUT);
+  pinMode(LED2, OUTPUT);
+  pinMode(LED3, OUTPUT);
+  pinMode(LED4, OUTPUT);
+  pinMode(LED5, OUTPUT);
+  pinMode(LED6, OUTPUT);
+  pinMode(LED7, OUTPUT);
+  pinMode(LED8, OUTPUT);
+  pinMode(LED9, OUTPUT);
+  pinMode(LED_BUILTIN, OUTPUT);
+  pinMode(3,INPUT_PULLUP);
+  pinMode(2,INPUT_PULLUP);
+}
+int leds [10]={LED0,LED1,LED2,LED3,LED4,LED5,LED6,LED7,LED8,LED9};
+ int segundos;
+ int segundoAnterior=0;
+ int contador=0;
+ int  pulsador=0;
+ int nBinarios[10];
+int auxContador;
+int estadoAntes=1;
+
+void loop()
+{
+ segundos=millis()/1000;
+ int estadoAhora=digitalRead(3);
+ 
+  if(estadoAhora!=estadoAntes){
+     pulsador++;
+    estadoAntes=estadoAhora;
+   	  }
+  
+if(pulsador==1){
+  
+  if(segundos!=segundoAnterior){
+    segundoAnterior=segundos;
+  	 contador++;
+   
+    auxContador=contador;
+      for(int i=0;i<contador;i++) {
+    		nBinarios[i]=auxContador%2;
+      		auxContador=auxContador/2;
+    	}
+    	for(int i=9;i>=0;i--) {
+      	// Serial.println(nBinarios[i]);
+     	 digitalWrite(leds[i],nBinarios[i]);
+   	 }
+   }
+  }
+  
+  if(pulsador==2) {
+   
+    for(int i= i-1;i>=0;i--){
+      digitalWrite(leds[i],nBinarios[i]);
+    } 
+  }
+  
+  if(2<pulsador) {
+    pulsador=1;
+   }
+  
+  if(digitalRead(2)==0){
+    contador=0;
+  }
+   
+  delay(25);
+  
+  Serial.println(pulsador);
+}
