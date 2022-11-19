@@ -1,0 +1,43 @@
+/*
+  Ejercicio: Al iniciar la simulacion, 
+  debemos mostrar la temperatura actual
+  que registra el sensor en los display
+  de 7 segmentos. Para esto, solamente
+  utilizaremos un rango de -9 a 99 grados.
+  En caso de que la temperatura estuviese
+  por fuera de dicho rango, solamente
+  debemos mostrar dos guiones.
+  
+  El programa debe ser capaz de guardar 10
+  registros de temperatura. Para guardar
+  un registro debemos presionar el boton
+  de la izquierda. Mantener el boton pulsa-
+  do solamente debe registrar la temperatura
+  una vez. Una vez lleno el registro, presio-
+  nar el boton causa que la temperatura mas
+  antigua registrada sea sobreescrita
+  
+  El boton de la derecha me permite calcular
+  el promedio de temperaturas registradas.
+  Mostrar el mismo en el puerto serie.
+  Mantener el boton presionado solamente debe
+  realizar el registro una vez
+  
+#include <LiquidCrystal.h>
+
+//LiquidCrystal lcd(pin rs, pin eneable,db4,db5,db6,db7);
+LiquidCrystal lcd(8,13,A0,A1,A2,A3);
+                                                                
+void setup()
+{
+  lcd.begin(16 , 2);
+}
+
+void loop()
+{
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.write("Password:");
+
+  delay(1500);
+}
