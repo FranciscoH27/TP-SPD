@@ -24,20 +24,73 @@
   realizar el registro una vez
   
 #include <LiquidCrystal.h>
+#include <Keypad.h>
 
-//LiquidCrystal lcd(pin rs, pin eneable,db4,db5,db6,db7);
+#define FILAS 4
+#define COLS 4 
 LiquidCrystal lcd(8,13,A0,A1,A2,A3);
-                                                                
+
+char keys[FILAS][COLS]={
+  {'1','2','3','A'},
+  {'4','5','6','B'},
+  {'7','8','9','C'},
+  {'*','0','#','D'}
+};
+byte rowPins[FILAS]={7,6,5,4};
+byte colPins[COLS]= {3,2,1,0};
+
+Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, FILAS, COLS );
+
 void setup()
 {
+  //pinMode(1,INPUT);
+  //pinMode(0,INPUT);
+  //Serial.begin(9600);
   lcd.begin(16 , 2);
+  pinMode(10,OUTPUT);
+  pinMode(9,OUTPUT);
 }
-
+char password[7];
+char validacion[7]={"1C2022"};
+int control=0;
+int segundos;
+int contador=0;
+int segundoAnterior=0;
 void loop()
 {
-  lcd.clear();
+  segundos=millis()/1000;
+  contador=segundos;
   lcd.setCursor(0,0);
-  lcd.write("Password:");
+  lcd.print("Password:");
 
-  delay(1500);
+  char key=keypad.getKey();
+  if(key!=NO_KEY){
+    if(control<6){
+      password[control]=key;
+      control++;
+    }
+    if(strcmp(password,validacion)!=0 && control==6){
+      lcd.setCursor(0,0);
+      //lcd.print("Password fail   ");
+      segundoAnterior=segundos;
+      if(segundos!=segundoAnterior){
+       segundoAnterior=segundos;
+       contador++;
+      }
+      if(contador<5){
+      digitalWrite(9,1);
+      }else{
+        digitalWrite(9,0);
+      }
+        
+      lcd.write(contador);
+    }else if(strcmp(password,validacion)==0){
+            lcd.setCursor(0,0);
+      lcd.print("Password ok      ");
+      digitalWrite(10,1);
+ 	}
+  	lcd.print(password);
+  }
+  
+delay(25);
 }
