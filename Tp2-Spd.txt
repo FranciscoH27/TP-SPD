@@ -63,47 +63,40 @@ int segundoAnterior=0;
 int contador=0;
 int estadoAntes=0;
 int estadoAhora;
-int pulsador=0;
 int reset;
 int estadoAhora2;
 int estadoAntes2=0;
-int pulsador2=0;
+int config=0;
 char nuevaContra[7];
 void loop()
 {
-  segundos=millis()/1000;
+	segundos=millis()/1000;
 
-  reset=digitalRead(12);
-  
-  if(pulsador2==0){
-  lcd.setCursor(0,0);
-  lcd.print("Password:");
-  }
-
-  borrarPassword(reset);
+  	reset=digitalRead(12);
+ 
+	if(reset==1){
+  		borrarPassword();
+    }
 
   
   char key=keypad.getKey();
   
-  
+  estadoAhora=digitalRead(11);
+  if(estadoAhora!=estadoAntes){
+      if(estadoAhora==HIGH) {
+       	validarPassword();
+      }
+  	estadoAntes=estadoAhora;
+  }
   
   estadoAhora2=digitalRead(A4);
-  if(estadoAhora2!=estadoAntes2 ){
+  if(estadoAhora2!=estadoAntes2){
       if(estadoAhora2==HIGH) {
-      	 pulsador2++;
+      	 config=1;
+        control=0;
        }
   		estadoAntes2=estadoAhora2;
   }
-   if(pulsador2==0){ 
-  	if(key!=NO_KEY){
-    	if(control<6){
-      	password[control]=key;
-      	control++;
-      	lcd.print(password);
-    	}
-  	}
-  } 
-  //lcd.setCursor(0,1);
   
    lcd.setCursor(0,0);
    if(config==0){ //PASSWORD
