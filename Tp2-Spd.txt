@@ -51,6 +51,7 @@ void setup()
   pinMode(9,OUTPUT);
   pinMode(11,INPUT);
   pinMode(12,INPUT);
+  pinMode(A4,INPUT_PULLUP);
 }
 
 
@@ -64,42 +65,86 @@ int estadoAntes=0;
 int estadoAhora;
 int pulsador=0;
 int reset;
-
+int estadoAhora2;
+int estadoAntes2=0;
+int pulsador2=0;
+char nuevaContra[7];
 void loop()
 {
   segundos=millis()/1000;
 
   reset=digitalRead(12);
+  
+  if(pulsador2==0){
   lcd.setCursor(0,0);
   lcd.print("Password:");
-	
-  if(reset==1){
-    lcd.clear();
-    lcd.setCursor(0,0);
-  lcd.print("Password:       ");
-    strcpy(password,"      ");
-    control=0;
-      }
+  }
+
+  borrarPassword(reset);
+
   
   char key=keypad.getKey();
-  if(key!=NO_KEY){
-    if(control<6){
-      password[control]=key;
-      control++;
-      lcd.print(password);
-    }
+  
+  
+  
+  estadoAhora2=digitalRead(A4);
+  if(estadoAhora2!=estadoAntes2 ){
+      if(estadoAhora2==HIGH) {
+      	 pulsador2++;
+       }
+  		estadoAntes2=estadoAhora2;
+  }
+   if(pulsador2==0){ 
+  	if(key!=NO_KEY){
+    	if(control<6){
+      	password[control]=key;
+      	control++;
+      	lcd.print(password);
+    	}
+  	}
+  } 
+  //lcd.setCursor(0,1);
+  
+   lcd.setCursor(0,0);
+   if(config==0){ //PASSWORD
+  	lcd.print("Password:");
+  	if(key!=NO_KEY){
+    	if(control<6){
+      		password[control]=key;
+      		control++;
+      		lcd.print(password);
+    	}
+  	}
+  } else { //CONFIG
+  	lcd.print("Config:  ");
+  	//strcpy(password,"        ");
+    if(key!=NO_KEY){
+      //lcd.print(key);
+      //lcd.setCursor(0,1);
+      //lcd.print(control);
+       if(control<6){
+    		nuevaContra[control]=key;
+      		control++;
+      		lcd.print(nuevaContra);
+   		}else{
+    		config=0;
+    		control=0;
+     		strcpy(password,"      ");
+      		strcpy(validacion,nuevaContra);
+    	}    
+  	}
   }
   
-  estadoAhora=digitalRead(11);
-  if(estadoAhora!=estadoAntes ){
-      if(estadoAhora==HIGH) {
-      	 pulsador++;
-       }
-  		estadoAntes=estadoAhora;
-  }
-  lcd.setCursor(0,1);
-  lcd.print(pulsador);
-  if(pulsador==1){
+	delay(25);
+}
+
+void validarPassword(){
+  int segundos=millis()/1000;
+  int segundoAnterior=segundos;
+  int contador;
+    
+    
+
   	if(strcmp(password,validacion)!=0 && control==6){
       lcd.setCursor(0,0);
       lcd.print("Password fail   ");
@@ -110,8 +155,13 @@ void loop()
       lcd.print("Password ok      ");
       digitalWrite(10,1);
     digitalWrite(9,0);
- 	}
-  	pulsador=0;
+ 	
+  	
   }
-delay(25);
+}
+void borrarPassword(){
+	lcd.setCursor(0,0);
+  	lcd.print("Password:       ");
+    strcpy(password,"      ");
+    control=0;
 }
