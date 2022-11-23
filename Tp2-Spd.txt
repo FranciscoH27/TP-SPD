@@ -1,3 +1,4 @@
+https://www.tinkercad.com/things/cU6DGo2Cg7a-tp2/editel?sharecode=tL0zmNTuI3izJcq-wnEyFN_k7zjnvzrmFHp83k2l7oo
 /*
   Ejercicio: Al iniciar la simulacion, 
   debemos mostrar la temperatura actual
