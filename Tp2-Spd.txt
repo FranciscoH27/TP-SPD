@@ -58,9 +58,6 @@ void setup()
 char password[7];
 char validacion[7]={"1C2022"};
 int control=0;
-int segundos;
-int segundoAnterior=0;
-int contador=0;
 int estadoAntes=0;
 int estadoAhora;
 int reset;
@@ -68,9 +65,10 @@ int estadoAhora2;
 int estadoAntes2=0;
 int config=0;
 char nuevaContra[7];
+int contador=0;
+int segundoAnterior=0;
 void loop()
 {
-	segundos=millis()/1000;
 
   	reset=digitalRead(12);
  
@@ -80,11 +78,18 @@ void loop()
 
   
   char key=keypad.getKey();
+  int segundos=millis()/1000;
   
+ 
+    
+  if(segundos!=segundoAnterior){
+  	segundoAnterior=segundos;
+    contador++;
+      }
   estadoAhora=digitalRead(11);
   if(estadoAhora!=estadoAntes){
       if(estadoAhora==HIGH) {
-       	validarPassword();
+       	validarPassword(contador);
       }
   	estadoAntes=estadoAhora;
   }
@@ -124,6 +129,7 @@ void loop()
     		control=0;
      		strcpy(password,"      ");
       		strcpy(validacion,nuevaContra);
+         	borrarPassword();
     	}    
   	}
   }
@@ -131,25 +137,31 @@ void loop()
 	delay(25);
 }
 
-void validarPassword(){
-  int segundos=millis()/1000;
-  int segundoAnterior=segundos;
-  int contador;
-    
-    
+void validarPassword(int contador){
+
 
   	if(strcmp(password,validacion)!=0 && control==6){
       lcd.setCursor(0,0);
       lcd.print("Password fail   ");
-    digitalWrite(9,1);
-    digitalWrite(10,0);
+      contador=0;
+      if(contador==1 || contador==3 || contador ==5){
+        digitalWrite(9,0);
+        contador++;
+      }else if(contador==0 || contador==2 || contador ==4){
+        digitalWrite(9,1);
+        contador++;
+      }  
     }else if(strcmp(password,validacion)==0 && control==6){
       lcd.setCursor(0,0);
       lcd.print("Password ok      ");
-      digitalWrite(10,1);
-    digitalWrite(9,0);
- 	
-  	
+      contador=0;
+      if(contador==1 || contador==3 || contador ==5){
+        digitalWrite(10,0);
+        contador++;
+      }else if(contador==0 || contador==2 || contador ==4){
+        digitalWrite(10,1);
+        contador++;
+      }  
   }
 }
 void borrarPassword(){
